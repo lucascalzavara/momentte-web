@@ -1,0 +1,22 @@
+# Dependências e arquivos gerados
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+
+# Configuração local (preserva o exemplo versionado)
+.env
+.env.*
+!.env.example
+*.local
+
+# Logs
+logs/
+*.log
+
+# Editor e sistema operacional
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+Desktop.ini
