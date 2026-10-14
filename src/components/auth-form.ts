@@ -4,6 +4,7 @@ import { authApi } from '../api/auth-api'
 import { ApiError } from '../api/http'
 import { authStore } from '../auth/auth-store'
 import { navigate } from '../lib/navigate'
+import { authReturn, invitationQuery } from '../lib/auth-return'
 
 @customElement('auth-form')
 export class AuthForm extends LitElement {
@@ -53,8 +54,9 @@ export class AuthForm extends LitElement {
         ? await authApi.register({ name, email, password }, this.controller.signal)
         : await authApi.login({ email, password }, this.controller.signal)
       if (!this.isConnected) return
+      const destination=authReturn()
       authStore.apply(response)
-      navigate('/conta', true)
+      navigate(destination, true)
     } catch (error) {
       if (!this.isConnected) return
       if (this.controller.signal.aborted) this.message = 'A conexão demorou mais que o esperado. Tente novamente.'
@@ -80,7 +82,7 @@ export class AuthForm extends LitElement {
       <div class="field"><label for=${`${this.mode}-password`}>Senha</label><div class="password-input"><input id=${`${this.mode}-password`} name="password" type=${this.visible ? 'text' : 'password'} autocomplete=${register ? 'new-password' : 'current-password'} placeholder=${register ? 'Crie uma senha' : 'Sua senha'} required ?readonly=${this.busy} aria-invalid=${Boolean(this.errors.password)} aria-describedby=${`${this.mode}-password-hint ${this.mode}-password-error`} @input=${this.clearError}><button type="button" class="password-toggle" aria-label=${this.visible ? 'Ocultar senha' : 'Mostrar senha'} aria-pressed=${this.visible} @click=${() => this.visible = !this.visible}>${this.visible ? 'Ocultar' : 'Mostrar'}</button></div>${register ? html`<span class="field-hint" id="register-password-hint">Pelo menos 8 caracteres. Até 72 bytes (acentos podem ocupar mais de um byte).</span>` : ''}${this.error('password')}</div>
       ${register ? html`<div class="field"><label for="register-confirmation">Confirme a senha</label><input id="register-confirmation" name="confirmation" type=${this.visible ? 'text' : 'password'} autocomplete="new-password" placeholder="Digite sua senha novamente" required ?readonly=${this.busy} aria-invalid=${Boolean(this.errors.confirmation)} aria-describedby="register-confirmation-error" @input=${this.clearError}>${this.error('confirmation')}</div>` : ''}
       <button type="submit" class="button auth-submit" ?disabled=${this.busy}>${this.busy ? html`<span class="spinner" aria-hidden="true"></span> ${register ? 'Criando sua conta…' : 'Entrando…'}` : html`${register ? 'Criar minha conta' : 'Entrar na minha conta'} <span>↗</span>`}</button>
-      <p class="auth-switch">${register ? html`Já tem uma conta? <a href="/login">Entrar</a>` : html`Ainda não tem uma conta? <a href="/cadastro">Cadastre-se</a>`}</p>
+      <p class="auth-switch">${register ? html`Já tem uma conta? <a href=${'/login'+invitationQuery()}>Entrar</a>` : html`Ainda não tem uma conta? <a href=${'/cadastro'+invitationQuery()}>Cadastre-se</a>`}</p>
     </form>`
   }
 }

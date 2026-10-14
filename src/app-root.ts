@@ -2,6 +2,9 @@ import { LitElement, html } from 'lit'
 import { customElement, state } from 'lit/decorators.js'
 import { authStore } from './auth/auth-store'
 import { navigate } from './lib/navigate'
+import {authReturn} from './lib/auth-return'
+import './pages/participation-page'
+import './components/event-screen'
 import './components/site-header'
 import './components/site-footer'
 import './pages/home-page'
@@ -15,7 +18,7 @@ export class AppRoot extends LitElement {
  private onSession = () => { this.guard(); this.requestUpdate() }
  private onAction = (event: Event) => {
    const action = (event as CustomEvent<string>).detail
-   if (action === 'login' || action === 'create') navigate(authStore.session ? '/conta' : action === 'login' ? '/login' : '/cadastro')
+   if (action === 'login' || action === 'create') navigate(authStore.session ? action==='create'?'/conta?novo=1':'/conta' : action === 'login' ? '/login' : '/cadastro')
  }
  private onClick = (event: MouseEvent) => {
    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
@@ -27,8 +30,8 @@ export class AppRoot extends LitElement {
    navigate(url.pathname + url.search)
  }
  private guard() {
-   if (this.path === '/conta' && !authStore.session) navigate('/login?expired=1', true)
-   else if ((this.path === '/login' || this.path === '/cadastro') && authStore.session) navigate('/conta', true)
+   if ((this.path === '/conta'||this.path.startsWith('/telao/')) && !authStore.session) navigate('/login?expired=1', true)
+   else if ((this.path === '/login' || this.path === '/cadastro') && authStore.session) navigate(authReturn(), true)
  }
  connectedCallback() {
    super.connectedCallback()
@@ -52,6 +55,10 @@ export class AppRoot extends LitElement {
    }
  }
  render() {
+   const invitation=this.path.match(/^\/e\/([a-f0-9]{32})$/)
+   if(invitation)return html`<participation-page .code=${invitation[1]}></participation-page>`
+   const screen=this.path.match(/^\/telao\/([a-f0-9-]{36})$/)
+   if(screen)return html`<event-screen .eventId=${screen[1]}></event-screen>`
    if (this.path === '/login') return html`<login-page></login-page>`
    if (this.path === '/cadastro') return html`<register-page></register-page>`
    if (this.path === '/conta') return html`<account-page></account-page>`
