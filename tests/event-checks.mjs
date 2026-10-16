@@ -23,5 +23,12 @@ assert.equal(authReturn('?next='+encodeURIComponent(invite)),invite)
 assert.equal(authReturn('?next=https://attacker.example'),'/conta')
 assert.equal(authReturn('?next=//attacker.example'),'/conta')
 assert.equal(authReturn('?next=/e/invalid'),'/conta')
+for (const route of ['moderacao','telao']) {
+ const path='/'+route+'/11111111-1111-1111-1111-111111111111'
+ assert.equal(authReturn('?next='+encodeURIComponent(path)),path)
+ assert.equal(invitationQuery('?next='+encodeURIComponent(path)),'?next='+encodeURIComponent(path))
+ assert.equal(authReturn('?next='+encodeURIComponent(path+'?redirect=https://attacker.example')),'/conta')
+ assert.equal(authReturn('?next=/'+route+'/invalid'),'/conta')
+}
 assert.equal(invitationQuery('?next='+encodeURIComponent(invite)),'?next='+encodeURIComponent(invite))
 console.log('OK: QR estilizado lido em 3 tamanhos para 3 URLs; retorno do convite preservado e redirects externos rejeitados.')

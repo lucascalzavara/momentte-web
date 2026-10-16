@@ -38,3 +38,11 @@ Para futuros endpoints protegidos, use `authenticatedPost` de `src/api/http.ts`:
 Verificações locais de endpoints/payloads, erros HTTP, refresh automático/concorrente, falhas de rede, restauração, logout durante refresh e repetição após 401: `node tests/auth-checks.mjs`. Usam respostas simuladas e não criam usuários no banco.
 
 Teste dos QR e retorno ao convite: `node tests/event-checks.mjs`. Aplique manualmente o SQL 004 na API antes de utilizar os novos fluxos.
+
+## Telas durante o evento
+
+No detalhe de um evento ativo, use **Abrir moderação** para acessar `/moderacao/{id}`. A tela é exclusiva do organizador, atualiza a cada 5 segundos e oferece filtros de pendentes, aprovados e rejeitados, miniaturas privadas e aprovação/rejeição por envio. Com moderação desativada, os envios são aprovados automaticamente. Os contadores abrangem até 200 registros retornados pela API.
+
+Convidados usam o link ou QR `/e/{codigo}`. Após entrar, podem selecionar uma imagem, escrever um texto ou combinar foto e legenda conforme a configuração. Antes do envio há uma revisão; o histórico mostra miniaturas e status dos próprios conteúdos e atualiza a cada 20 segundos. As telas de moderação e telão preservam o destino após login. O telão consulta somente aprovados a cada 5 segundos.
+
+Estas telas reutilizam os endpoints existentes e não exigem um novo SQL além do 004. Validação visual realizada com a fixture local (sem PostgreSQL ou cobranças reais).

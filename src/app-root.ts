@@ -4,6 +4,7 @@ import { authStore } from './auth/auth-store'
 import { navigate } from './lib/navigate'
 import {authReturn} from './lib/auth-return'
 import './pages/participation-page'
+import './pages/moderation-page'
 import './components/event-screen'
 import './components/site-header'
 import './components/site-footer'
@@ -30,7 +31,7 @@ export class AppRoot extends LitElement {
    navigate(url.pathname + url.search)
  }
  private guard() {
-   if ((this.path === '/conta'||this.path.startsWith('/telao/')) && !authStore.session) navigate('/login?expired=1', true)
+   if ((this.path === '/conta'||this.path.startsWith('/telao/')||this.path.startsWith('/moderacao/')) && !authStore.session) navigate('/login?expired=1&next='+encodeURIComponent(this.path), true)
    else if ((this.path === '/login' || this.path === '/cadastro') && authStore.session) navigate(authReturn(), true)
  }
  connectedCallback() {
@@ -57,6 +58,8 @@ export class AppRoot extends LitElement {
  render() {
    const invitation=this.path.match(/^\/e\/([a-f0-9]{32})$/)
    if(invitation)return html`<participation-page .code=${invitation[1]}></participation-page>`
+   const moderation=this.path.match(/^\/moderacao\/([a-f0-9-]{36})$/)
+   if(moderation)return html`<moderation-page .eventId=${moderation[1]}></moderation-page>`
    const screen=this.path.match(/^\/telao\/([a-f0-9-]{36})$/)
    if(screen)return html`<event-screen .eventId=${screen[1]}></event-screen>`
    if (this.path === '/login') return html`<login-page></login-page>`
