@@ -41,8 +41,14 @@ Teste dos QR e retorno ao convite: `node tests/event-checks.mjs`. Aplique manual
 
 ## Telas durante o evento
 
+A lista de eventos tem busca por nome nas abas Organizo e Participo, ignorando acentos e maiúsculas. A busca é local sobre os eventos carregados e mostra o total de resultados.
+
+Em Conteúdos do evento, **Baixar todas as imagens (ZIP)** é liberado após encerrar, dentro do prazo. Inclui todas as imagens aprovadas, inclusive além dos 200 envios mostrados na tela. O navegador recebe o ZIP por streaming, usando um ticket temporário em vez de colocar o JWT na URL; acompanhe o progresso no gerenciador de downloads. Não é necessário novo SQL. Detalhes de implantação e limitações estão em `Momentte.Api/docs/events.md`.
+
 No detalhe de um evento ativo, use **Abrir moderação** para acessar `/moderacao/{id}`. A tela é exclusiva do organizador, atualiza a cada 5 segundos e oferece filtros de pendentes, aprovados e rejeitados, miniaturas privadas e aprovação/rejeição por envio. Com moderação desativada, os envios são aprovados automaticamente. Os contadores abrangem até 200 registros retornados pela API.
 
 Convidados usam o link ou QR `/e/{codigo}`. Após entrar, podem selecionar uma imagem, escrever um texto ou combinar foto e legenda conforme a configuração. Antes do envio há uma revisão; o histórico mostra miniaturas e status dos próprios conteúdos e atualiza a cada 20 segundos. As telas de moderação e telão preservam o destino após login. O telão consulta somente aprovados a cada 5 segundos.
 
 Estas telas reutilizam os endpoints existentes e não exigem um novo SQL além do 004. Validação visual realizada com a fixture local (sem PostgreSQL ou cobranças reais).
+
+Na criação/edição em organização, **Exibir QR code no telão** é opcional e vale para os dois planos. O QR permanece disponível para compartilhar na gestão mesmo desativado no telão. A prévia acompanha essa escolha. Os controles de gestão/tela cheia aparecem por interação e se ocultam após 3 segundos; o QR exibido no telão não contém os botões de copiar ou baixar. Banco existente requer aplicação manual de `Momentte.Api/scripts/005_event_screen_qr.sql`; o init.sql já foi atualizado para bancos novos.

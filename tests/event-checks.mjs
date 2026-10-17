@@ -32,3 +32,13 @@ for (const route of ['moderacao','telao']) {
 }
 assert.equal(invitationQuery('?next='+encodeURIComponent(invite)),'?next='+encodeURIComponent(invite))
 console.log('OK: QR estilizado lido em 3 tamanhos para 3 URLs; retorno do convite preservado e redirects externos rejeitados.')
+
+const {searchEvents}=load('lib/event-search.ts')
+const events=[{name:'Celebração de Júlia',id:1},{name:'Evento Corporativo',id:2},{name:'Festa de João',id:3}]
+assert.deepEqual(Array.from(searchEvents(events,'  JULIA celebracao  '),e=>e.id),[1])
+assert.deepEqual(Array.from(searchEvents(events,'corpor'),e=>e.id),[2])
+assert.equal(searchEvents(events,'  ').length,3)
+assert.equal(searchEvents(events,'inexistente').length,0)
+assert.equal(searchEvents([], 'Festa').length,0)
+assert.equal(events.length,3)
+console.log('OK: busca por nome ignora acentos/maiúsculas, aceita termos e preserva a lista original.')

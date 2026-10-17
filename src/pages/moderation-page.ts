@@ -1,3 +1,4 @@
+import {brandHref} from '../lib/brand-href'
 import {LitElement, html, css} from 'lit'
 import {repeat} from 'lit/directives/repeat.js'
 import {customElement, property, state} from 'lit/decorators.js'
@@ -64,7 +65,7 @@ export class ModerationPage extends LitElement {
   const event = this.event
   const visible = this.items.filter(item => this.filter === 'all' || item.status === this.filter)
   const available = event?.state === 'active' || event?.state === 'awaiting_download'
-  return html`<main><header><a href="/conta" class="brand"><img src="/brand/wordmark.svg" alt="Momentte"></a><a href="/conta">← Meus eventos</a></header>
+  return html`<main><header><a href=${brandHref()} class="brand"><img src="/brand/wordmark.svg" alt="Momentte"></a><a href="/conta">← Meus eventos</a></header>
    <section class="heading"><div><span class="eyebrow">CADA OLHAR MERECE CUIDADO</span><h1>Moderação do evento</h1><p>${event?.name ?? 'Carregando evento…'} ${event ? html`<span class="tag">${stateNames[event.state]}</span>` : ''}</p></div><div class="actions">${event?.state === 'active' ? html`<a class="primary" href=${'/telao/' + event.id} target="_blank" rel="noopener">Abrir telão ↗</a>` : ''}<button ?disabled=${this.loading || !!this.acting} @click=${()=>this.load()}>${this.loading ? 'Atualizando…' : 'Atualizar envios'}</button></div></section>
    ${this.error ? html`<p class="error" role="alert">${this.error}</p>` : ''}${this.notice ? html`<p class="notice" role="status">${this.notice}</p>` : ''}
    ${event ? html`<div class="mode"><span class="indicator"></span><div><strong>${event.moderationEnabled ? 'Aprovação antes de exibir' : 'Publicação automática'}</strong><p>${event.moderationEnabled ? 'Novos envios chegam em Pendentes. Aprove para liberar aos telões.' : 'Este evento está sem moderação prévia. Os envios são aprovados automaticamente; você pode rejeitá-los aqui.'}</p></div><small>${this.refreshed ? 'Atualizado às ' + this.refreshed : ''}<br>Atualização automática a cada 5 s</small></div>` : ''}

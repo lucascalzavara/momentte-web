@@ -1,4 +1,4 @@
-export interface Appearance { themeColor: string|null; textColor:string; fontFamily:string; textScale:string; mediaMode:string; moderationEnabled:boolean; name:string }
+export interface Appearance { themeColor: string|null; textColor:string; fontFamily:string; textScale:string; mediaMode:string; moderationEnabled:boolean; showQrCode:boolean; name:string }
 export interface EventItem extends Appearance { id:string; publicCode:string; startsAt:string; endsAt:string; state:string; paid:boolean; hasCustomLogo:boolean; canDownload:boolean; downloadUntil:string|null; storageUsedBytes:number; storageLimitBytes:number; effectiveBackground:string; effectiveTextColor:string; effectiveFont:string; effectiveScale:string }
 export interface PublicEvent { name:string; publicCode:string; startsAt:string; endsAt:string; state:string; mediaMode:string; moderationEnabled:boolean; backgroundColor:string; textColor:string; fontFamily:string; textScale:string; hasCustomLogo:boolean }
 export interface Submission { id:string; eventId:string; hasImage:boolean; text:string|null; status:string; authorName:string|null; createdAt:string; bytes:number }
